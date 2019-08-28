@@ -2,9 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Show all halls</title>
 </head>
 <body>
-$END$
+    <table>
+        <thead>
+            <tr>
+                <td>Nazwa</td>
+                <td>Pojemność</td>
+                <td>Czy dostępny jest wyświetlacz:</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for hall in halls %}
+                <tr>
+                    <td>{{ hall.name }}</td>
+                    <td>{{ hall.capacity }}</td>
+                    <td>{% if hall.projector_available %}Tak{% else %}Nie{% endif %}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>

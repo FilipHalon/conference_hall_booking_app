@@ -2,9 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Show details on a hall</title>
 </head>
 <body>
-$END$
+    <p>
+        {{ hall.name }}
+        <br>
+        Pojemność: {{ hall.capacity }}
+        <br>
+        Czy wyświetlacz jest dostępny: {% if hall.projector_available %}Tak{% else %}Nie{% endif %}
+    </p>
 </body>
 </html>

@@ -2,9 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Modify a hall</title>
 </head>
 <body>
-$END$
+    <form action="" method="POST">
+        {% csrf_token %}
+        <label>Nazwa sali:
+            <input type="text" name="name" value="{{ hall.name }}" required>
+        </label>
+        <label>Pojemność sali (w miejscach):
+            <input type="text" name="capacity" value="{{ hall.capacity }}" required>
+        </label>
+        <label>Czy w sali znajduje się projektor?
+            <label for="projector_yes">Tak</label>
+            <input type="radio" id="projector_yes" name="projector_available" value="True" required {% if hall.projector_available %}checked{% endif %}>
+            <label for="projector_no">Nie</label>
+            <input type="radio" id="projector_no" name="projector_available" value="False" required {% if not hall.projector_available %}checked{% endif %}>
+        </label>
+        <input type="submit" value="Zmień">
+    </form>
 </body>
 </html>
