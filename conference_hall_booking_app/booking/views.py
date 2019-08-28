@@ -93,15 +93,15 @@ class MakeReservation(View):
         reservation_date = request.POST['reservation']
         Booking.objects.create(date=reservation_date, hall=hall)
 
-        return redirect('reserve')
-
-
-class Reserve(View):
-
-    # def get(self, request, hall_id):
-    #     return render(request, 'add_a_comment.html')
-
-    def post(self, request, hall_id):
-        hall = ConferenceHall.objects.get(pk=hall_id)
-        Booking.objects.create(date=reservation_date, hall=hall)
         return redirect('home')
+
+
+# class Reserve(View):
+#
+#     # def get(self, request, hall_id):
+#     #     return render(request, 'add_a_comment.html')
+#
+#     def post(self, request, hall_id):
+#         hall = ConferenceHall.objects.get(pk=hall_id)
+#         Booking.objects.create(date=reservation_date, hall=hall)
+#         return redirect('home')

@@ -6,6 +6,7 @@
 </head>
 <body>
     <form action="" method="POST">
+        {% csrf_token %}
         <table border="1px">
             {% for reservation_date in dates %}
                 {% if forloop.first or forloop.counter|add:"-1"|divisibleby:5 %}

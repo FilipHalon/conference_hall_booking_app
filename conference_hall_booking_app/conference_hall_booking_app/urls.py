@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from django.views.generic.base import TemplateView
-from booking.views import show_all_halls, show_hall_details, AddNewHall, ModifyHall, DeleteHall, MakeReservation, Reserve
+from booking.views import show_all_halls, show_hall_details, AddNewHall, ModifyHall, DeleteHall, MakeReservation
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,5 +26,5 @@ urlpatterns = [
     re_path(r'^hall/modify/(?P<hall_id>\d+)$', ModifyHall.as_view(), name='modify-hall'),
     re_path(r'^hall/delete/(?P<hall_id>\d+)$', DeleteHall.as_view()),
     re_path(r'^reservation/(?P<hall_id>\d+)$', MakeReservation.as_view(), name='make-a-reservation'),
-    re_path(r'^reservation/(?P<hall_id>\d+)/reserve$', Reserve.as_view(), name='reserve'),
+    # re_path(r'^reservation/(?P<hall_id>\d+)/reserve$', Reserve.as_view(), name='reserve'),
 ]
