@@ -8,20 +8,27 @@
     <table>
         <thead>
             <tr>
-                <td>Nazwa</td>
-                <td>Pojemność</td>
-                <td>Czy dostępny jest wyświetlacz:</td>
+                <td>Name</td>
+                <td>Capacity</td>
+                <td>Is a projector available in the hall?</td>
             </tr>
         </thead>
         <tbody>
             {% for hall in halls %}
                 <tr>
-                    <td>{{ hall.name }}</td>
+                    <td><a href="{% url 'hall-details' hall_id=hall.id %}">{{ hall.name }}</a></td>
                     <td>{{ hall.capacity }}</td>
                     <td>{% if hall.projector_available %}Tak{% else %}Nie{% endif %}</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+    <br>
+{#    <form action="/hall/new" method="GET">#}
+{#        {% csrf_token %}#}
+{#        <input type="submit" value="Nowa sala">#}
+{#    </form>#}
+{#    <a href="/hall/new/"><input type="submit" value="Nowa sala"></a>#}
+    <a href="/hall/new/"><input type="button" value="Add a new hall"></a>
 </body>
 </html>

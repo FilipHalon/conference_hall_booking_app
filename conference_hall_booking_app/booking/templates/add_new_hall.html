@@ -7,19 +7,19 @@
 <body>
     <form action="" method="POST">
         {% csrf_token %}
-        <label>Nazwa sali:
+        <label>Name of the hall:
             <input type="text" name="name" required>
         </label>
-        <label>Pojemność sali (w miejscach):
+        <label>Capacity (in number of seats):
             <input type="text" name="capacity" required>
         </label>
-        <label>Czy w sali znajduje się projektor?
-            <label for="projector_yes">Tak</label>
+        <label>Is a projector available in the hall?
+            <label for="projector_yes">Yes</label>
             <input type="radio" id="projector_yes" name="projector_available" value="True" required>
-            <label for="projector_no">Nie</label>
+            <label for="projector_no">No</label>
             <input type="radio" id="projector_no" name="projector_available" value="False" required>
         </label>
-        <input type="submit" value="Dodaj">
+        <input type="submit" value="Add">
     </form>
 </body>
 </html>

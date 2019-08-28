@@ -8,9 +8,10 @@
     <p>
         {{ hall.name }}
         <br>
-        Pojemność: {{ hall.capacity }}
+        Capacity: {{ hall.capacity }}
         <br>
-        Czy wyświetlacz jest dostępny: {% if hall.projector_available %}Tak{% else %}Nie{% endif %}
+        Is a projector available in the hall? {% if hall.projector_available %}Yes{% else %}No{% endif %}
     </p>
+    <a href="{% url 'make-a-reservation' hall_id=hall.id %}"><input type="button" value="Make a reservation"></a>
 </body>
 </html>

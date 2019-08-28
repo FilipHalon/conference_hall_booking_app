@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Make a reservation</title>
+</head>
+<body>
+    <form action="" method="POST">
+        <table border="1px">
+            {% for reservation_date in dates %}
+                {% if forloop.first or forloop.counter|add:"-1"|divisibleby:5 %}
+                    <tr>
+                {% endif %}
+                        <td>
+    {#                    <td>{% if reservation_date|date:"Y-m-d" not in reservations %}<a href="{% url 'reserve' hall_id=hall.id %}">{% endif %}#}
+                            <input type="submit" name="reservation" value="{{ reservation_date|date:"Y-m-d" }}" {% if reservation_date|date:"Y-m-d" in reservations %}disabled{% endif %}>
+    {#                        {% if reservation_date|date:"Y-m-d" not in reservations %}</a>{% endif %}</td>#}
+                        </td>
+                {% if forloop.counter|divisibleby:5 or forloop.last %}
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    </form>
+</body>
+</html>
