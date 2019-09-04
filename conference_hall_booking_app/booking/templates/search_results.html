@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search results</title>
+</head>
+<body>
+    {% if not search_list %}
+        <p>
+            There are no vacant conference halls that day.
+        </p>
+    {% else %}
+        <p>
+            Halls available on {{ reservation_date }}
+        </p>
+    {% endif %}
+    <table>
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td>Capacity</td>
+                <td>Is projector available</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for hit in search_list %}
+                <tr>
+                    <td>{{ hit.name }}</td>
+                    <td>{{ hit.capacity }}</td>
+                    <td>{% if hit.projector_available %}Yes{% else %}No{% endif %}</td>
+                    <td><a href="{% url 'make-a-reservation' hall_id=hit.id %}"><button>Book</button></a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p>Search for available halls
+        <form action="/search/" method="GET">
+            <label>
+                <select name="reservation">
+                    {% for reservation_date in dates %}
+                        {% if reservation_date|date:"Y-m-d"|slugify == request.session.reservation %}
+                            <option value="{{ reservation_date|date:"Y-m-d" }}" selected>{{ reservation_date|date:"Y-m-d" }}</option>
+                        {% else %}
+                            <option value="{{ reservation_date|date:"Y-m-d" }}">{{ reservation_date|date:"Y-m-d" }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Name of the hall
+                <select name="hall">
+                    {% for hall in halls %}
+                        {% if forloop.first %}
+                            <option value="None" selected>--Leave unselected--</option>
+                        {% endif %}
+                        {% if hall.name == request.session.name %}
+                            <option value="{{ hall.name }}" selected>{{ hall.name }}</option>
+                        {% else %}
+                            <option value="{{ hall.name }}">{{ hall.name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Minimal capacity of the hall
+                <select name="capacity">
+                    {% for hall in halls %}
+                        {% if forloop.first %}
+                            <option value="-1" selected>--Leave unselected--</option>
+                        {% endif %}
+                        {% if hall.capacity == request.session.capacity %}
+                            <option value="{{ hall.capacity }}" selected>{{ hall.capacity }}</option>
+                        {% else %}
+                            <option value="{{ hall.capacity }}">{{ hall.capacity }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Projector needed
+                <label>
+                    <input type="checkbox" name="projector" value="True" {% if request.session.projector %}checked{% endif %}>
+                </label>
+            </label>
+            <input type="submit" value="Search">
+        </form>
+    </p>
+    <a href="/"><button>Back to the main page</button></a>
+</body>
+</html>

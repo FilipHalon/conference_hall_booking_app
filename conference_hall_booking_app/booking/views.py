@@ -2,21 +2,89 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.http import HttpResponse
 # from django.utils.decorators import method_decorator
-# from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt
 from .models import ConferenceHall, Booking
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
+
+
+today = date.today()
+halls = ConferenceHall.objects.all()
+
+
+def prepare_date_list(year, month, day):
+    date_range = int((date(year, month, day) - today).days)
+    dates = [today + timedelta(day) for day in range(date_range)]
+    return dates
+
+
+def get_reservation_list(hall_id):
+    reservations = Booking.objects.filter(hall=hall_id)
+    reservations = [str(reservation.date) for reservation in reservations]
+    return reservations
+
+
+dates = prepare_date_list(2020, 1, 1)
 
 # Create your views here.
 
 
+@csrf_exempt
 def show_all_halls(request):
-    halls = ConferenceHall.objects.all()
-    return render(request, 'show_all_halls.html', {'halls': halls})
+    return render(request, 'show_all_halls.html', {'halls': halls,
+                                                   'dates': dates})
 
 
-def show_hall_details(request, hall_id):
-    hall = ConferenceHall.objects.get(pk=hall_id)
-    return render(request, 'show_hall_details.html', {'hall': hall})
+@csrf_exempt
+def search(request):
+    reservation_date = request.GET['reservation']
+    name = request.GET['hall']
+    capacity = request.GET['capacity']
+    projector = request.GET.get('projector')
+    if not projector:
+        projector = False
+    # search_list = Booking.objects.filter(date=reservation_date).filter(hall__name=name)
+
+    # request.session['reservation'] = datetime.strptime(reservation_date, '%Y-%m-%d').date()
+    request.session['reservation'] = reservation_date
+    request.session['name'] = name
+    request.session['capacity'] = int(capacity)
+    request.session['projector'] = projector
+
+    if name == 'None' and capacity == '-1':
+        search_list = ConferenceHall.objects.exclude(booking__date=reservation_date) \
+            .filter(projector_available=projector)
+    elif name == 'None':
+        search_list = ConferenceHall.objects.exclude(booking__date=reservation_date) \
+            .filter(capacity__gte=capacity).filter(projector_available=projector)
+    elif capacity == '-1':
+        search_list = ConferenceHall.objects.exclude(booking__date=reservation_date).filter(name=name) \
+            .filter(projector_available=projector)
+    else:
+        search_list = ConferenceHall.objects.exclude(booking__date=reservation_date).filter(name=name) \
+            .filter(capacity__gte=capacity).filter(projector_available=projector)
+    return render(request, 'search_results.html', {'search_list': search_list,
+                                                   'reservation_date': reservation_date,
+                                                   'halls': halls,
+                                                   'dates': dates})
+
+
+class ShowHallDetails(View):
+
+    def get(self, request, hall_id):
+        hall = ConferenceHall.objects.get(pk=hall_id)
+        reservations = get_reservation_list(hall_id)
+
+        return render(request, 'show_hall_details.html', {'hall': hall,
+                                                          'dates': dates,
+                                                          'reservations': reservations})
+
+    def post(self, request, hall_id):
+        hall = ConferenceHall.objects.get(pk=hall_id)
+        reservation_date = request.POST['reservation']
+        comment = request.POST.get('comment')
+        Booking.objects.create(date=reservation_date, hall=hall, comment=comment)
+
+        return redirect('home')
 
 
 class AddNewHall(View):
@@ -73,22 +141,12 @@ class DeleteHall(View):
 class MakeReservation(View):
 
     def get(self, request, hall_id):
+        reservations = get_reservation_list(hall_id)
 
-        hall = ConferenceHall.objects.get(pk=hall_id)
-
-        today = date.today()
-        date_range = int((date(2020, 1, 1) - today).days)
-        dates = [today + timedelta(day) for day in range(date_range)]
-
-        reservations = Booking.objects.filter(hall=hall_id)
-        reservations = [str(reservation.date) for reservation in reservations]
-
-        return render(request, 'make_a_reservation.html', {'hall': hall,
-                                                           'dates': dates,
+        return render(request, 'make_a_reservation.html', {'dates': dates,
                                                            'reservations': reservations})
 
     def post(self, request, hall_id):
-
         hall = ConferenceHall.objects.get(pk=hall_id)
         reservation_date = request.POST['reservation']
         Booking.objects.create(date=reservation_date, hall=hall)

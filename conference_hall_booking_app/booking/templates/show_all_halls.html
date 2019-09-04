@@ -30,5 +30,43 @@
 {#    </form>#}
 {#    <a href="/hall/new/"><input type="submit" value="Nowa sala"></a>#}
     <a href="/hall/new/"><input type="button" value="Add a new hall"></a>
+    <p>Search for available halls
+        <form action="/search/" method="GET">
+            {% csrf_token %}
+            <label>
+                <select name="reservation">
+                    {% for reservation_date in dates %}
+                        <option value="{{ reservation_date|date:"Y-m-d" }}">{{ reservation_date|date:"Y-m-d" }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Name of the hall
+                <select name="hall">
+                    {% for hall in halls %}
+                        {% if forloop.first %}
+                            <option value="None" selected>--Leave unselected--</option>
+                        {% endif %}
+                        <option value="{{ hall.name }}">{{ hall.name }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Minimal capacity of the hall
+                <select name="capacity">
+                    {% for hall in halls %}
+                        {% if forloop.first %}
+                            <option value="-1" selected>--Leave unselected--</option>
+                        {% endif %}
+                        <option value="{{ hall.capacity }}">{{ hall.capacity }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Projector needed
+                <label>
+                    <input type="checkbox" name="projector" value="True">
+                </label>
+            </label>
+            <input type="submit" value="Search">
+        </form>
+    </p>
 </body>
 </html>

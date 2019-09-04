@@ -12,6 +12,24 @@
         <br>
         Is a projector available in the hall? {% if hall.projector_available %}Yes{% else %}No{% endif %}
     </p>
-    <a href="{% url 'make-a-reservation' hall_id=hall.id %}"><input type="button" value="Make a reservation"></a>
+    <p>
+        Make a reservation
+        <form action="" method="POST">
+            <label>Select a date
+                <select name="reservation">
+                    {% for reservation_date in dates %}
+                        {% if not reservation_date|date:"Y-m-d" in reservations %}
+                            <option value="{{ reservation_date|date:"Y-m-d" }}">{{ reservation_date|date:"Y-m-d" }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Leave a comment if you have any
+                <input type="text" name="comment">
+            </label>
+            <input type="submit" value="Book">
+        </form>
+    </p>
+    <a href="{% url 'make-a-reservation' hall_id=hall.id %}"><input type="button" value="Or choose a date"></a>
 </body>
 </html>
