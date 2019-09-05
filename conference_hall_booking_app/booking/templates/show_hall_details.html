@@ -31,5 +31,6 @@
         </form>
     </p>
     <a href="{% url 'make-a-reservation' hall_id=hall.id %}"><input type="button" value="Or choose a date"></a>
+    <a href="{% url 'modify-delete-reservation' hall_id=hall.id %}"><button>Modify or delete reservations</button></a>
 </body>
 </html>

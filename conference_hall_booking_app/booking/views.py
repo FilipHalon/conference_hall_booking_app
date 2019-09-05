@@ -154,6 +154,33 @@ class MakeReservation(View):
         return redirect('home')
 
 
+class ModifyDeleteReservation(View):
+
+    def get(self, request, hall_id):
+        hall = ConferenceHall.objects.get(pk=hall_id)
+        reservations = get_reservation_list(hall_id)
+        reservation_dates = Booking.objects.filter(hall=hall_id).order_by('date')
+        return render(request, 'modify_delete_a_reservation.html', {'hall': hall,
+                                                                    'dates': dates,
+                                                                    'reservations': reservations,
+                                                                    'reservation_dates': reservation_dates})
+
+    def post(self, request, hall_id):
+        reservation_date = request.POST.get('reservation_date')
+        comment = request.POST.get('comment')
+        former_reservation = Booking.objects.get(pk=request.POST['former_date'])
+
+        if reservation_date:
+            former_reservation.date = reservation_date
+            former_reservation.comment = comment
+            former_reservation.save()
+
+        else:
+            former_reservation.delete()
+
+        return redirect('hall-details', hall_id=hall_id)
+
+
 # class Reserve(View):
 #
 #     # def get(self, request, hall_id):

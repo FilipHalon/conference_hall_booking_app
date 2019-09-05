@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Modify/delete a hall</title>
+</head>
+<body>
+    <p>
+        Change reservations for {{ hall.name }} conference hall.
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <td>Date</td>
+                <td>Change</td>
+                <td>Delete</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in reservation_dates %}
+                <tr>
+                    <td>{{ reservation.date|date:"Y-m-d" }}</td>
+                    <td>
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <label>Name of the hall
+                                <select name="reservation_date">
+{#                                    {% for conf_hall in halls %}#}
+{#                                        <option value="{{ conf_hall.name }}">{{ conf_hall.name }} (capacity: {{ hall.capacity }}, projector {% if conf_hall.projector_available %}available{% else %}unavailable{% endif %}</option>#}
+{#                                    {% endfor %}#}
+                                    {% for reservation_date in dates %}
+                                        {% if reservation_date|date:"Y-m-d" not in reservations %}
+                                            <option value="{{ reservation_date|date:"Y-m-d" }}">{{ reservation_date|date:"Y-m-d" }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </label>
+                            <label>Comments
+                                <input type="text" name="comment" value="{{ reservation.comment }}">
+                            </label>
+                            <input type="hidden" name="former_date" value="{{ reservation.id }}">
+                            <label>
+                                <input type="submit" value="Apply">
+                            </label>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="former_date" value="{{ reservation.id }}">
+                            <label>
+                                <input type="submit" name="delete" value="Delete">
+                            </label>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
